@@ -117,6 +117,8 @@ What is the direction of the slope? How does this match your expectations from Q
 
 **Answer 3:**
 
+The direction of the slope is upward. This means that the ice off doy increases as the year increases, which does match my expectations. 
+
 # Is our model any good?
 
 ## R2
@@ -128,6 +130,8 @@ First, it is important to understand how much variation is explained by the mode
 What is the R2 for the regression? Based on the R2, is `year` and `ice_off_doy` strongly related?
 
 **Answer 4:**
+
+R2 - 0.1145. This means they are not strongly related. 
 
 ## Residuals normally distributed
 
