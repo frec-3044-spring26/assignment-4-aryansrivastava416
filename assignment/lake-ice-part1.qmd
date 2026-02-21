@@ -91,11 +91,16 @@ Create an object called `fit` that contains the results of the linear model.
 
 ```{r}
 
+fit <- lm(year ~ ice_off_doy, ice_data)
+fit
+
 ```
 
 Then, use the function `summary` to explore the result of the `lm` function.
 
 ```{r}
+
+summary(fit)
 
 ```
 
