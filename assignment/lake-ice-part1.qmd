@@ -152,7 +152,9 @@ You will use a histogram to examine the residuals. First, the code uses the coef
 
 ```{r}
 sunapee <- sunapee %>% 
-  mutate(predicted = fit$coefficients[1] + year * fit$coefficients[2], 
+  mutate(ice_off_doy = as.numeric(ice_off_doy),
+         year = as.numeric(year),
+         predicted = fit$coefficients[1] + year * fit$coefficients[2], 
          residual = ice_off_doy - predicted) #Observed - Predicted
 ```
 
@@ -163,6 +165,12 @@ Use the [`add_predictions()`](https://modelr.tidyverse.org/reference/add_predict
 **Answer 5:**
 
 ```{r}
+library(modelr)
+
+sunapee <- sunapee |>
+  mutate(ice_off_doy = as.character(ice_off_doy))|>
+  add_predictions(fit)|>
+  add_residuals(fit)
 
 ```
 
