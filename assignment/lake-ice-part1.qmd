@@ -235,6 +235,16 @@ Now plot the data for Lake Sunapee (just like above - year on x-axis vs. ice of 
 **Answer 10:**
 ```{r}
 
+ggplot(sunapee, aes(x = year, y = ice_off_doy)) +
+  geom_point(alpha = 0.4) +
+  geom_abline(
+    intercept = coefficients(fit)[1],
+    slope = coefficients(fit)[2],
+    color = 'red',
+    size = 1
+  ) +
+  labs(title = 'Ice off Day .vs. Year including slope and Intercept', x = 'Time(yr)', y = 'Ice off Day of Year')
+
 ```
 
 **Question 11:**
