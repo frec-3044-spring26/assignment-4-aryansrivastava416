@@ -91,8 +91,12 @@ Create an object called `fit` that contains the results of the linear model.
 
 ```{r}
 
-fit <- lm(year ~ ice_off_doy, ice_data)
+ice_data <- ice_data|>
+  mutate(ice_off_doy = as.numeric(as.character(ice_off_doy)))
+
+fit <- lm(ice_off_doy ~ year, data = ice_data)
 fit
+
 
 ```
 
@@ -131,7 +135,7 @@ What is the R2 for the regression? Based on the R2, is `year` and `ice_off_doy` 
 
 **Answer 4:**
 
-R2 - 0.1145. This means they are not strongly related. 
+R2 - 0.09876. This means they are not strongly related. 
 
 ## Residuals normally distributed
 
@@ -168,7 +172,6 @@ Use the [`add_predictions()`](https://modelr.tidyverse.org/reference/add_predict
 library(modelr)
 
 sunapee <- sunapee |>
-  mutate(ice_off_doy = as.character(ice_off_doy))|>
   add_predictions(fit)|>
   add_residuals(fit)
 
@@ -184,7 +187,12 @@ Show Histogram and answer the following question: do the residuals meet the assu
 
 ```{r}
 
+ggplot(sunapee)+
+  geom_histogram(aes(x = resid), binwidth = 10)+
+  theme_classic()
+
 ```
+The histogram shows they are not perfectly normally distributed. Therefore, the residuals only partially fit the linear regression. 
 
 
 ## The slope is different from zero
@@ -197,6 +205,8 @@ Based on the `summary()` above, what is the p-value for the slope?
 
 **Answer 7:**
 
+The p-value for the slope is 2e-16. Since this value is far smaller than 0.05, we reject the null hypothesis that the slope is equal to zero. Therefore, the slope is statistically significantly different from zero.
+
 ## The slope physically meaningful
 
 A slope value could have a low probability of being 0 (thus we have a strong belief that it is not zero), but the magnitude of change is functionally meaningless in the physical world (i.e., the rate of change is so small that we would not think much of it). This can occur particularly when analyzing large datasets.
@@ -207,6 +217,8 @@ Based on the slope value, how many more years are needed to pass before the lake
 
 **Answer 8:**
 
+The slope is −0.098 days per year, meaning the ice-off date is occurring about 0.10 days earlier each year. To observe a one week change, it would take approximately 71 years. While the slope is statistically significant, the rate of change is relatively small per year. However, over several decades, this results in a meaningful ecological shift.
+
 ## Overall model assessment
 
 **Question 9:**
@@ -214,6 +226,8 @@ Based on the slope value, how many more years are needed to pass before the lake
 How comfortable are you proceeding with using this linear model for additional analysis and prediction? Why? (I am not looking for your gut answer, rather I want you to apply concepts taught in this module to justify your answer)
 
 **Answer 9:**
+
+I am moderately comfortable using this linear model for identifying long-term trends, but less comfortable using it for precise prediction. The slope is statistically significant (p < 2e-16), indicating strong evidence that the ice-off date is changing over time. However, the R² value is approximately 0.09876, meaning the model explains only about 9.876% of the variation in ice-off dates. Additionally, the residuals show considerable spread, suggesting substantial unexplained variability. Therefore, while the model is useful for detecting overall trends, it is limited in predictive accuracy for individual years.
 
 **Question 10:**
 Now plot the data for Lake Sunapee (just like above - year on x-axis vs. ice of doy on y axis) but add the line from your regression results (e.g., fit intercept and slope). You will use the [`geom_abline`](https://ggplot2.tidyverse.org/reference/geom_abline.html). 
