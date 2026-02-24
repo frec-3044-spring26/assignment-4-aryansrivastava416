@@ -257,10 +257,17 @@ The goal of this question is to make a forecast of the future ice-off day (with 
 - How wide is your confidence interval (number of days)?
 
 **Answer 11:**
+Predicted ice off day for 2040 = 293.896 - 0.09847(2040) = 93.1
 
 ```{r}
 
+quantile(sunapee$resid, probs = c(0.05, 0.95), na.rm = TRUE)
+
 ```
+lower bound = 93.1 + (-8.95649) = 84.14351
+upper bound = 93.1 + (24.17267) = 117.27267
+90% confidence level = [84.14, 117.27]
+width of interval = 11.27 - 84.14 = 33.13 days
 
 # Is the ice-off day of the year changing more quickly in more recent years at Lake Sunapee?
 
@@ -273,6 +280,41 @@ Use the skills developed above to evaluate the question "Is the ice-off day of y
 **Answer 12:**
 
 Use a mix of code, figures, and text to present your analysis.  If you want to compare slopes, be sure they are on the same plot.
+
+```{r}
+
+early <- sunapee|>
+  filter(year < 1970)
+
+late <- sunapee|>
+  filter(year >= 1970)
+
+fit_early <- lm(ice_off_doy ~ year, data = early)
+fit_late <- lm(ice_off_doy ~ year, data = late)
+
+summary(fit_early)
+summary(fit_late)
+
+ggplot(sunapee, aes(x = year, y = ice_off_doy)) +
+  geom_point(alpha = 0.4) +
+  geom_abline(
+    intercept = coefficients(fit_early)[1],
+    slope = coefficients(fit_early)[2],
+    color = 'blue',
+    size = 1
+  )+
+  geom_abline(
+    intercept = coefficients(fit_late)[1],
+    slope = coefficients(fit_late)[2],
+    color = 'red',
+    size = 1
+  )+
+  theme_classic()+
+  labs(title = 'Ice off Day of Year .vs. Time with slope and intercepts shown based on time', 
+       x = 'Time(yr)',
+       y = 'Ice off Day of Year')
+```
+Before 1970, the slope was −0.110 days per year, meaning ice-off was occurring about 0.11 days earlier per year. After 1970, the slope increased in magnitude to −0.302 days per year, indicating ice-off is now occurring about 0.30 days earlier per year. Since the magnitude of the slope is substantially larger in the later period, the ice-off day is changing more quickly in recent years. Both slopes are statistically significant, and the higher R² value in the later period suggests a stronger relationship in recent decades. Therefore, the data provide evidence that the rate of change has accelerated over time.
 
 # Rendering and committing
 
